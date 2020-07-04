@@ -1,2 +1,2 @@
-# SneakerBot
-Buy sneaker given URL
+First project simple sneaker web scraper
+
