@@ -4,3 +4,5 @@ Initially was going to use requests, bs4 but foundout that for pages that use js
 
 Successful in scraping but will need to find a different method prolly with regex since for some products, shoe size div has a different class. Also, need to speed up selenium, since this wouldn't be too competitive in buying fast
 
+Added some optimization such as disable js, pictures, plugins, etc. Would need to further investigate chrome profile and how it works since
+
