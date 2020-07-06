@@ -6,3 +6,5 @@ Successful in scraping but will need to find a different method prolly with rege
 
 Added some optimization such as disable js, pictures, plugins, etc. Would need to further investigate chrome profile and how it works since
 
+Added option to for user to select size, program would add to cart
+New issue arise when looking for checking out button "STALEELEMENT EXCEPTION"
