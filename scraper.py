@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
 import time
 
 chrome_options = webdriver.ChromeOptions()
@@ -67,19 +68,36 @@ for size in sizes:
     choice_number += 1
 
 # Get size from user
-number_option = int(input("Please select number according to your desired size: "))
+# number_option = int(input("Please select number according to your desired size: "))
+
+# ========================
+# TESTING VALUE
+number_option = 1
+# ========================
+
 # Get size button element saved from above
 size_button = size_options[number_option][1]
 # Free up space
 size_options = {}
 
 add_to_cart = browser.find_element_by_css_selector("button[aria-label='Add to Cart']")
-mouse = webdriver.ActionChains(browser)
+mouse = ActionChains(browser)
 # Add item to cart
 mouse.click(size_button).click(add_to_cart).perform()
 # Go to cart
 browser.get("https://www.nike.com/us/en/cart")
 
-# NEED FIX STALEELEMENTEXCEPTION==============================
-# mouse.click(browser.find_element_by_css_selector("button[data-automation='go-to-checkout-button']")).perform()
+# ================== NEED FIX STALEELEMENTEXCEPTION ==============================
+mouse = ActionChains(browser)
+check_out = browser.find_element_by_css_selector("button[data-automation='go-to-checkout-button']")
+mouse.click(check_out)
+mouse.perform()
+print("CLICKED")
+
+# ============== NEED FIX GUEST CHECK OUT elementsFromPoint =================
+# Failed to execute 'elementsFromPoint' on 'Document': The provided double value is non-finite.
+guest_check_out = browser.find_element_by_css_selector("button[data-automation='guest-checkout-button']")
+time.sleep(3)
+mouse.click(check_out)
+mouse.perform()
 
