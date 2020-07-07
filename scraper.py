@@ -1,6 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
-import time
 
 chrome_options = webdriver.ChromeOptions()
 
@@ -30,7 +29,7 @@ chrome_options.add_experimental_option('prefs', PREFS)
 
 browser = webdriver.Chrome(executable_path='C:\Program Files (x86)\Google\Chrome\chromedriver.exe', options=chrome_options)
 
-browser.get("https://www.nike.com/t/kyrie-6-n7-basketball-shoe-n61njg/CW1785-200")
+browser.get("https://www.nike.com/t/lebron-17-basketball-shoe-6LSXgh/BQ3177-601")
 
 # find all divs with size's class name
 for POTENTIAL_CLASS in POTENTIAL_CLASSES:
@@ -71,7 +70,7 @@ for size in sizes:
 # number_option = int(input("Please select number according to your desired size: "))
 
 # ========================
-# TESTING VALUE
+# TESTING VALUE FIRST SIZE
 number_option = 1
 # ========================
 
@@ -83,21 +82,14 @@ size_options = {}
 add_to_cart = browser.find_element_by_css_selector("button[aria-label='Add to Cart']")
 mouse = ActionChains(browser)
 # Add item to cart
-mouse.click(size_button).click(add_to_cart).perform()
+mouse.click(size_button).pause(1).click(add_to_cart).pause(1).perform()
 # Go to cart
 browser.get("https://www.nike.com/us/en/cart")
 
-# ================== NEED FIX STALEELEMENTEXCEPTION ==============================
-mouse = ActionChains(browser)
-check_out = browser.find_element_by_css_selector("button[data-automation='go-to-checkout-button']")
-mouse.click(check_out)
-mouse.perform()
-print("CLICKED")
+mouse = ActionChains(browser) 
+browser.find_element_by_css_selector("button[data-automation='go-to-checkout-button']").click()
+mouse.pause(2).perform()
+browser.find_element_by_css_selector("button[data-automation='guest-checkout-button']").click()
 
-# ============== NEED FIX GUEST CHECK OUT elementsFromPoint =================
-# Failed to execute 'elementsFromPoint' on 'Document': The provided double value is non-finite.
-guest_check_out = browser.find_element_by_css_selector("button[data-automation='guest-checkout-button']")
-time.sleep(3)
-mouse.click(check_out)
-mouse.perform()
+
 
