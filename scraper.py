@@ -87,9 +87,8 @@ mouse.click(size_button).pause(1).click(add_to_cart).pause(1).perform()
 browser.get("https://www.nike.com/us/en/cart")
 
 mouse = ActionChains(browser) 
-browser.find_element_by_css_selector("button[data-automation='go-to-checkout-button']").click()
-mouse.pause(2).perform()
-browser.find_element_by_css_selector("button[data-automation='guest-checkout-button']").click()
-
+check_out = browser.find_element_by_css_selector("button[data-automation='go-to-checkout-button']")
+guest_checkout = browser.find_element_by_css_selector("button[data-automation='guest-checkout-button']")
+mouse.click(check_out).pause(2).click(guest_checkout).perform()
 
 
