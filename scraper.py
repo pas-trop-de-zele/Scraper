@@ -1,5 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions
+
 
 chrome_options = webdriver.ChromeOptions()
 
@@ -82,13 +86,25 @@ size_options = {}
 add_to_cart = browser.find_element_by_css_selector("button[aria-label='Add to Cart']")
 mouse = ActionChains(browser)
 # Add item to cart
-mouse.click(size_button).pause(1).click(add_to_cart).pause(1).perform()
+mouse.click(size_button).pause(0.5).click(add_to_cart).pause(0.5).perform()
 # Go to cart
 browser.get("https://www.nike.com/us/en/cart")
 
+# PENDING explaining why need to make new ActionChains 
 mouse = ActionChains(browser) 
+# ====================================================
 check_out = browser.find_element_by_css_selector("button[data-automation='go-to-checkout-button']")
 guest_checkout = browser.find_element_by_css_selector("button[data-automation='guest-checkout-button']")
 mouse.click(check_out).pause(2).click(guest_checkout).perform()
+
+# wait until 'firstname field' element is available on checkout page
+element = WebDriverWait(browser, 10).until(
+    expected_conditions.presence_of_element_located((By.ID, "firstName"))
+)
+
+# FILLING IN ADDRESS FORMS
+mouse = ActionChains(browser)
+first_name = browser.find_element_by_id("firstName")
+last_name = browser.find_element_by_id("lastName")
 
 
