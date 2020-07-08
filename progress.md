@@ -15,3 +15,7 @@ New issue arise when looking for checking out button "STALEELEMENT EXCEPTION"
 
 07/07/20
 Got to checkout site and filling out forms, need to find out how to select options from a dropdown
+
+07/08/20
+Add waiting for method to be clickable for a few items instead of pausing for some seconds
+=> Need to work on how to find text within the cart items count in order to verify that item was added to cart
