@@ -44,7 +44,7 @@ for POTENTIAL_CLASS in POTENTIAL_CLASSES:
     if sizes:
         break
 
-print("Available sizes:")
+# print("Available sizes:")
 
 # Dict to hash size with number choice
 size_options = {}
@@ -57,10 +57,10 @@ for size in sizes:
     size_display = size.find_element_by_tag_name('input')
     # if attribute 'disabled' exist means out out stock
     out_of_stock = size_display.get_attribute('disabled')
-    if out_of_stock:
-        print(f"{choice_number}. {size.text} <= OUT OF STOCK")
-    else:
-        print(f"{choice_number}. {size.text}")
+    # if out_of_stock:
+    #     print(f"{choice_number}. {size.text} <= OUT OF STOCK")
+    # else:
+    #     print(f"{choice_number}. {size.text}")
 
     """
     save 'choice_number' : [size text, size display object] 
@@ -84,28 +84,40 @@ size_button = size_options[number_option][1]
 size_options = {}
 
 add_to_cart = browser.find_element_by_css_selector("button[aria-label='Add to Cart']")
-mouse = ActionChains(browser)
-# Add item to cart
-mouse.click(size_button).pause(0.5).click(add_to_cart).pause(1).perform()
+
+# Check if item is added yet, if not click again
+item_added = False
+while not item_added:
+    mouse = ActionChains(browser)
+    mouse.click(size_button).click(add_to_cart).perform()
+    cart_item = browser.find_element_by_class_name("cart-jewel")
+    print(f"Item in cart count: {cart_item.text}")
+    if cart_item.text != '0' and cart_item.text != '':
+        item_added = True
+
+
 # Go to cart
 browser.get("https://www.nike.com/us/en/cart")
 
-# PENDING explaining why need to make new ActionChains 
-mouse = ActionChains(browser) 
-# ====================================================
-check_out = browser.find_element_by_css_selector("button[data-automation='go-to-checkout-button']")
-guest_checkout = browser.find_element_by_css_selector("button[data-automation='guest-checkout-button']")
-mouse.click(check_out).pause(2).click(guest_checkout).perform()
+# wait until 'Go to checkout' option is available on checkout page then click
+WebDriverWait(browser, 10).until(
+    expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, "button[data-automation='go-to-checkout-button']"))
+).click()
+
+# wait until 'Check out as guest' option is available on checkout page then click
+guest_checkout = WebDriverWait(browser, 10).until(
+    expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, "button[data-automation='guest-checkout-button']"))
+).click()
 
 # wait until 'Enter address manually' option is available on checkout page
-element = WebDriverWait(browser, 10).until(
-    expected_conditions.presence_of_element_located((By.ID, "addressSuggestionOptOut"))
-)
+WebDriverWait(browser, 10).until(
+    expected_conditions.visibility_of_element_located((By.ID, "addressSuggestionOptOut"))
+).click()
 
 # FILLING IN ADDRESS FORMS
 mouse = ActionChains(browser)
 # Select enter address manually
-browser.find_element_by_id('addressSuggestionOptOut').click()
+# browser.find_element_by_id('addressSuggestionOptOut').click()
 # Select to add address field 2
 browser.find_element_by_css_selector("button[aria-controls='address2']").click()
 # Find according fields to enter information
