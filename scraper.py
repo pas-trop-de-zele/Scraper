@@ -85,14 +85,19 @@ size_options = {}
 
 add_to_cart = browser.find_element_by_css_selector("button[aria-label='Add to Cart']")
 
-# Check if item is added yet, if not click again
 item_added = False
+# Check if item is added yet, if not click add to cart again
 while not item_added:
     mouse = ActionChains(browser)
     mouse.click(size_button).click(add_to_cart).perform()
-    cart_item = browser.find_element_by_class_name("cart-jewel")
-    print(f"Item in cart count: {cart_item.text}")
-    if cart_item.text != '0' and cart_item.text != '':
+    """
+    For some reason, could not use element.text to retrieve text 
+    from cart span => use execute_script() to call js script instead 
+    through attribute .textContent
+    """
+    item_count = browser.execute_script("return document.querySelector('span.cart-jewel').textContent")
+    # Default is 0, if item added, this will change and stop loop
+    if item_count != '0':
         item_added = True
 
 
@@ -111,7 +116,7 @@ guest_checkout = WebDriverWait(browser, 10).until(
 
 # wait until 'Enter address manually' option is available on checkout page
 WebDriverWait(browser, 10).until(
-    expected_conditions.visibility_of_element_located((By.ID, "addressSuggestionOptOut"))
+    expected_conditions.element_to_be_clickable((By.ID, "addressSuggestionOptOut"))
 ).click()
 
 # FILLING IN ADDRESS FORMS
