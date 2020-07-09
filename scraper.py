@@ -3,10 +3,9 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.ui import Select
 
-
-chrome_options = webdriver.ChromeOptions()
-
+# ======================== INFO ================================
 """
 Preferences for efficiency
 2 - block, 1 - allow, 0 - default
@@ -27,6 +26,22 @@ PREFS = {"profile.managed_default_content_settings.images":2,
 
 # Potential classes name that Nike use for their size chart
 POTENTIAL_CLASSES = ['css-1uentg', 'css-1gxjmmq']
+
+# Billing Info
+FIRST_NAME = "Pablo"
+LAST_NAME = "Escobar"
+ADDRESS1 = "9039 Bolsa Ave"
+ADDRESS2 = "Suite 309"
+CITY = "Westmisnter"
+POSTAL_CODE = "92704"
+EMAIL = "pescobar@yahoo.com"
+PHONE_NUMBER = "7145359388"
+
+# ========================================================
+
+
+
+chrome_options = webdriver.ChromeOptions()
 
 # Add reference defined above
 chrome_options.add_experimental_option('prefs', PREFS)
@@ -119,25 +134,37 @@ WebDriverWait(browser, 10).until(
     expected_conditions.element_to_be_clickable((By.ID, "addressSuggestionOptOut"))
 ).click()
 
-# FILLING IN ADDRESS FORMS
-mouse = ActionChains(browser)
-# Select enter address manually
-# browser.find_element_by_id('addressSuggestionOptOut').click()
 # Select to add address field 2
 browser.find_element_by_css_selector("button[aria-controls='address2']").click()
+
+# FILLING IN STATES DROPDOWN
+states = Select(browser.find_element_by_id("state"))
+states.select_by_visible_text('California')
+
+# FILLING IN ADDRESS FORMS
+mouse = ActionChains(browser)
+
 # Find according fields to enter information
 first_name = browser.find_element_by_id("firstName")
 last_name = browser.find_element_by_id("lastName")
 address1 = browser.find_element_by_id("address1")
 address2 = browser.find_element_by_id("address2")
 city = browser.find_element_by_id("city")
+postal_code = browser.find_element_by_id("postalCode")
+email = browser.find_element_by_id("email")
+phone_number = browser.find_element_by_id("phoneNumber")
 
-
-mouse.send_keys_to_element(first_name, 'Pablo')
-mouse.send_keys_to_element(last_name, 'Escobar')
-mouse.send_keys_to_element(address1, '9039 Bolsa Ave')
-mouse.send_keys_to_element(address2, 'Suite 309')
-mouse.send_keys_to_element(city, 'Westminster')
+mouse.send_keys_to_element(first_name, FIRST_NAME)
+mouse.send_keys_to_element(last_name, LAST_NAME)
+mouse.send_keys_to_element(address1, ADDRESS1)
+mouse.send_keys_to_element(address2, ADDRESS2)
+mouse.send_keys_to_element(city, CITY)
+mouse.send_keys_to_element(postal_code, POSTAL_CODE)
+mouse.send_keys_to_element(email, EMAIL)
+mouse.send_keys_to_element(phone_number, PHONE_NUMBER)
 mouse.perform()
+
+browser.find_element_by_css_selector("button[type='submit']").click()
+
 
 
