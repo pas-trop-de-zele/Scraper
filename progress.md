@@ -25,3 +25,5 @@ However, calling js script may work
 07/09/20
 => Successfully use .execute_script() to retrieve inner text showing
 numbers of item in cart
+=> Need to handle some case when cart is added more than once
+Finish adding drop down selection for states
