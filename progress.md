@@ -19,3 +19,5 @@ Got to checkout site and filling out forms, need to find out how to select optio
 07/08/20
 Add waiting for method to be clickable for a few items instead of pausing for some seconds
 => Need to work on how to find text within the cart items count in order to verify that item was added to cart
+=> for some reason element.text does not return text instead undefined,
+However, calling js script may work
