@@ -21,3 +21,7 @@ Add waiting for method to be clickable for a few items instead of pausing for so
 => Need to work on how to find text within the cart items count in order to verify that item was added to cart
 => for some reason element.text does not return text instead undefined,
 However, calling js script may work
+
+07/09/20
+=> Successfully use .execute_script() to retrieve inner text showing
+numbers of item in cart
