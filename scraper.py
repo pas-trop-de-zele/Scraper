@@ -4,6 +4,100 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import Select
+from settings import PREFS, CHROME_DRIVER_PATH, POTENTIAL_CLASSES
+import billing_info
+
+class Scraper:
+    def __init__(self):
+        # Set preference
+        self.chrome_options = webdriver.ChromeOptions()
+        self.chrome_options.add_experimental_option('prefs', PREFS)
+        self.browser = webdriver.Chrome(executable_path=CHROME_DRIVER_PATH, options=self.chrome_options)
+        # set billing info
+        self.FIRST_NAME = billing_info.FIRST_NAME
+        self.LAST_NAME = billing_info.LAST_NAME
+        self.ADDRESS1 = billing_info.ADDRESS1
+        self.ADDRESS2 = billing_info.ADDRESS2
+        self.CITY = billing_info.CITY
+        self.POSTAL_CODE = billing_info.POSTAL_CODE
+        self.EMAIL = billing_info.EMAIL
+        self.PHONE_NUMBER = billing_info.PHONE_NUMBER
+        self.size_options = {}
+    
+    def go_to_product(self, url):
+        """
+        Go to product page
+
+        Args:
+          url: url of product page
+        """
+        self.browser.get(url)
+
+    def get_available_sizes(self):
+        """
+        Find all divs containing sizes
+
+        Store in size_options dictionary
+        size_number: size_button_element
+        """
+        for potentials_class in POTENTIAL_CLASSES:
+            size_containing_divs = self.browser.find_elements_by_css_selector('div.' + potentials_class)
+        for div in size_containing_divs:
+            size_button = div.find_element_by_tag_name('input')
+            self.size_options[div.text] = [size_button]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.ui import Select
 
 # ======================== INFO ================================
 """
@@ -28,27 +122,26 @@ PREFS = {"profile.managed_default_content_settings.images":2,
 POTENTIAL_CLASSES = ['css-1uentg', 'css-1gxjmmq']
 
 # Billing Info
-FIRST_NAME = "Pablo"
-LAST_NAME = "Escobar"
-ADDRESS1 = "9039 Bolsa Ave"
-ADDRESS2 = "Suite 309"
-CITY = "Westmisnter"
-POSTAL_CODE = "92704"
-EMAIL = "pescobar@yahoo.com"
-PHONE_NUMBER = "7145359388"
-
-# ========================================================
-
-
+FIRST_NAME = "Billy"
+LAST_NAME = "Johnson"
+ADDRESS1 = "9039 ABC St"
+ADDRESS2 = "Suite 101"
+CITY = "Malden"
+STATE = "Massachusetts"
+POSTAL_CODE = "02148"
+EMAIL = "sample@yahoo.com"
+PHONE_NUMBER = "7143534765"
 
 chrome_options = webdriver.ChromeOptions()
 
-# Add reference defined above
+# Add preference defined above
 chrome_options.add_experimental_option('prefs', PREFS)
 
 browser = webdriver.Chrome(executable_path='C:\Program Files (x86)\Google\Chrome\chromedriver.exe', options=chrome_options)
 
 browser.get("https://www.nike.com/t/lebron-17-basketball-shoe-6LSXgh/BQ3177-601")
+
+# ==============================================================
 
 # find all divs with size's class name
 for POTENTIAL_CLASS in POTENTIAL_CLASSES:
