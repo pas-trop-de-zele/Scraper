@@ -1,0 +1,10 @@
+# Billing Info Sample Value
+FIRST_NAME = "Billy"
+LAST_NAME = "Johnson"
+ADDRESS1 = "9039 ABC St"
+ADDRESS2 = "Suite 101"
+CITY = "Malden"
+STATE = "Massachusetts"
+POSTAL_CODE = "02148"
+EMAIL = "sample@yahoo.com"
+PHONE_NUMBER = "7143534765"
