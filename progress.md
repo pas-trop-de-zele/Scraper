@@ -30,3 +30,7 @@ Finish adding drop down selection for states
 
 07/10/20
 Refactoring into Scraper class
+
+07/11/20
+Finish refactoring into Scraper class
+=> Need to research whether execute javascript would be faster then interacting through selenium webdriver
