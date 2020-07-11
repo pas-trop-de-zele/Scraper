@@ -19,245 +19,137 @@ class Scraper:
         self.ADDRESS1 = billing_info.ADDRESS1
         self.ADDRESS2 = billing_info.ADDRESS2
         self.CITY = billing_info.CITY
+        self.STATE = billing_info.STATE
         self.POSTAL_CODE = billing_info.POSTAL_CODE
         self.EMAIL = billing_info.EMAIL
         self.PHONE_NUMBER = billing_info.PHONE_NUMBER
         self.size_options = {}
     
-    def go_to_product(self, url):
+    def go_to_product(self, product_url):
         """
         Go to product page
 
         Args:
           url: url of product page
         """
-        self.browser.get(url)
+        self.browser.get(product_url)
 
-    def get_available_sizes(self):
+    def go_to_cart(self):
+        """
+        Go to cart page
+        """
+        cart_url = "https://www.nike.com/us/en/cart"
+        self.browser.get(cart_url)
+
+    def get_sizes(self):
         """
         Find all divs containing sizes
-
-        Store in size_options dictionary
-        size_number: size_button_element
+        Look for inner element that hold the size element
+        Add to size_options dict
         """
         for potentials_class in POTENTIAL_CLASSES:
             size_containing_divs = self.browser.find_elements_by_css_selector('div.' + potentials_class)
         for div in size_containing_divs:
             size_button = div.find_element_by_tag_name('input')
-            self.size_options[div.text] = [size_button]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-from selenium import webdriver
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.support.ui import Select
-
-# ======================== INFO ================================
-"""
-Preferences for efficiency
-2 - block, 1 - allow, 0 - default
-
-***Need to further read about chrome profile and these options
-=>>>> These were forked from Dinuduke github
-"""
-PREFS = {"profile.managed_default_content_settings.images":2,
-         "profile.default_content_setting_values.notifications":2,
-         "profile.managed_default_content_settings.stylesheets":2,
-         "profile.managed_default_content_settings.cookies":1,
-         "profile.managed_default_content_settings.javascript":1,
-         "profile.managed_default_content_settings.plugins":2,
-         "profile.managed_default_content_settings.popups":2,
-         "profile.managed_default_content_settings.geolocation":2,
-         "profile.managed_default_content_settings.media_stream":2,
-         }
-
-# Potential classes name that Nike use for their size chart
-POTENTIAL_CLASSES = ['css-1uentg', 'css-1gxjmmq']
-
-# Billing Info
-FIRST_NAME = "Billy"
-LAST_NAME = "Johnson"
-ADDRESS1 = "9039 ABC St"
-ADDRESS2 = "Suite 101"
-CITY = "Malden"
-STATE = "Massachusetts"
-POSTAL_CODE = "02148"
-EMAIL = "sample@yahoo.com"
-PHONE_NUMBER = "7143534765"
-
-chrome_options = webdriver.ChromeOptions()
-
-# Add preference defined above
-chrome_options.add_experimental_option('prefs', PREFS)
-
-browser = webdriver.Chrome(executable_path='C:\Program Files (x86)\Google\Chrome\chromedriver.exe', options=chrome_options)
-
-browser.get("https://www.nike.com/t/lebron-17-basketball-shoe-6LSXgh/BQ3177-601")
-
-# ==============================================================
-
-# find all divs with size's class name
-for POTENTIAL_CLASS in POTENTIAL_CLASSES:
-    """
-    Look for divs with this classname
-    """
-    sizes = browser.find_elements_by_css_selector('div.' + POTENTIAL_CLASS)
-    if sizes:
-        break
-
-# print("Available sizes:")
-
-# Dict to hash size with number choice
-size_options = {}
-choice_number = 1
-"""
-Look inside found div
-which are sizes that out of stock
-"""
-for size in sizes:
-    size_display = size.find_element_by_tag_name('input')
-    # if attribute 'disabled' exist means out out stock
-    out_of_stock = size_display.get_attribute('disabled')
-    # if out_of_stock:
-    #     print(f"{choice_number}. {size.text} <= OUT OF STOCK")
-    # else:
-    #     print(f"{choice_number}. {size.text}")
-
-    """
-    save 'choice_number' : [size text, size display object] 
-
-    size display object to perform actions later
-    """ 
-    size_options[choice_number] = [size.text, size_display]
-    choice_number += 1
-
-# Get size from user
-# number_option = int(input("Please select number according to your desired size: "))
-
-# ========================
-# TESTING VALUE FIRST SIZE
-number_option = 1
-# ========================
-
-# Get size button element saved from above
-size_button = size_options[number_option][1]
-# Free up space
-size_options = {}
-
-add_to_cart = browser.find_element_by_css_selector("button[aria-label='Add to Cart']")
-
-item_added = False
-# Check if item is added yet, if not click add to cart again
-while not item_added:
-    mouse = ActionChains(browser)
-    mouse.click(size_button).click(add_to_cart).perform()
-    """
-    For some reason, could not use element.text to retrieve text 
-    from cart span => use execute_script() to call js script instead 
-    through attribute .textContent
-    """
-    item_count = browser.execute_script("return document.querySelector('span.cart-jewel').textContent")
-    # Default is 0, if item added, this will change and stop loop
-    if item_count != '0':
-        item_added = True
-
-
-# Go to cart
-browser.get("https://www.nike.com/us/en/cart")
-
-# wait until 'Go to checkout' option is available on checkout page then click
-WebDriverWait(browser, 10).until(
-    expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, "button[data-automation='go-to-checkout-button']"))
-).click()
-
-# wait until 'Check out as guest' option is available on checkout page then click
-guest_checkout = WebDriverWait(browser, 10).until(
-    expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, "button[data-automation='guest-checkout-button']"))
-).click()
-
-# wait until 'Enter address manually' option is available on checkout page
-WebDriverWait(browser, 10).until(
-    expected_conditions.element_to_be_clickable((By.ID, "addressSuggestionOptOut"))
-).click()
-
-# Select to add address field 2
-browser.find_element_by_css_selector("button[aria-controls='address2']").click()
-
-# FILLING IN STATES DROPDOWN
-states = Select(browser.find_element_by_id("state"))
-states.select_by_visible_text('California')
-
-# FILLING IN ADDRESS FORMS
-mouse = ActionChains(browser)
-
-# Find according fields to enter information
-first_name = browser.find_element_by_id("firstName")
-last_name = browser.find_element_by_id("lastName")
-address1 = browser.find_element_by_id("address1")
-address2 = browser.find_element_by_id("address2")
-city = browser.find_element_by_id("city")
-postal_code = browser.find_element_by_id("postalCode")
-email = browser.find_element_by_id("email")
-phone_number = browser.find_element_by_id("phoneNumber")
-
-mouse.send_keys_to_element(first_name, FIRST_NAME)
-mouse.send_keys_to_element(last_name, LAST_NAME)
-mouse.send_keys_to_element(address1, ADDRESS1)
-mouse.send_keys_to_element(address2, ADDRESS2)
-mouse.send_keys_to_element(city, CITY)
-mouse.send_keys_to_element(postal_code, POSTAL_CODE)
-mouse.send_keys_to_element(email, EMAIL)
-mouse.send_keys_to_element(phone_number, PHONE_NUMBER)
-mouse.perform()
-
-browser.find_element_by_css_selector("button[type='submit']").click()
-
-
+            self.size_options[div.text] = size_button
+
+    def choose_size(self, your_size):
+        """
+        Get size button from size_option dict and click on it
+
+        Arg: 
+            your_size: your desired size
+        """
+        try:
+            if self.is_available(your_size):
+                return self.size_options[your_size]
+            print("Size out of stock")
+        except KeyError:
+            print("Size does not exist")
+
+    def is_available(self, your_size):
+        """
+        Check if a size is available
+
+        Args:
+            your_size: your desired size
+        """
+        size_button = self.size_options[your_size]
+        out_of_stock = size_button.get_attribute("disabled")
+        if out_of_stock:
+            return False
+        return True
+
+    def add_to_cart(self, size_button):
+        """
+        Select size and add to cart
+        Check if item is added through cart-item count, if not keep trying to add
+
+        Args:
+            size_button: size button element
+        """
+        add_to_cart = self.browser.find_element_by_css_selector("button[aria-label='Add to Cart']")
+        item_added = False
+        while not item_added:
+            mouse = ActionChains(self.browser)
+            mouse.click(size_button).click(add_to_cart).perform()
+            """
+            For some reason, could not use element.text to retrieve text 
+            from cart span => use execute_script() to call js script instead 
+            through attribute .textContent
+            """
+            item_count = self.browser.execute_script("return document.querySelector('span.cart-jewel').textContent")
+            # Default is 0, if item added, this will change and stop loop
+            if item_count != '0':
+                item_added = True
+
+    def click_when_avaialble(self, css_selector):
+        WebDriverWait(self.browser, 10).until(
+            expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, css_selector))
+        ).click()
+
+    def fillout_billing_info(self):
+        # FILLING IN STATES DROPDOWN
+        states = Select(self.browser.find_element_by_id("state"))
+        states.select_by_visible_text(self.STATE)
+
+        # FILLING IN ADDRESS FORMS
+        mouse = ActionChains(self.browser)
+
+        # Find according fields to enter information
+        first_name =self.browser.find_element_by_id("firstName")
+        last_name =self.browser.find_element_by_id("lastName")
+        address1 =self.browser.find_element_by_id("address1")
+        address2 =self.browser.find_element_by_id("address2")
+        city =self.browser.find_element_by_id("city")
+        postal_code =self.browser.find_element_by_id("postalCode")
+        email =self.browser.find_element_by_id("email")
+        phone_number =self.browser.find_element_by_id("phoneNumber")
+
+        mouse.send_keys_to_element(first_name, self.FIRST_NAME)
+        mouse.send_keys_to_element(last_name, self.LAST_NAME)
+        mouse.send_keys_to_element(address1, self.ADDRESS1)
+        mouse.send_keys_to_element(address2, self.ADDRESS2)
+        mouse.send_keys_to_element(city, self.CITY)
+        mouse.send_keys_to_element(postal_code, self.POSTAL_CODE)
+        mouse.send_keys_to_element(email, self.EMAIL)
+        mouse.send_keys_to_element(phone_number, self.PHONE_NUMBER)
+        mouse.perform()
+
+    def submit(self):
+        self.browser.find_element_by_css_selector("button[type='submit']").click()
+
+
+jordan = Scraper()
+jordan.go_to_product("https://www.nike.com/t/lebron-17-basketball-shoe-6LSXgh/BQ3177-601")
+jordan.get_sizes()
+size = jordan.choose_size('M 3.5 / W 5')
+jordan.add_to_cart(size)
+jordan.go_to_cart()
+jordan.click_when_avaialble("button[data-automation='go-to-checkout-button']")
+jordan.click_when_avaialble("button[data-automation='guest-checkout-button']")
+jordan.click_when_avaialble("a[id='addressSuggestionOptOut']")
+jordan.click_when_avaialble("button[aria-controls='address2']")
+jordan.fillout_billing_info()
+jordan.submit()
 
