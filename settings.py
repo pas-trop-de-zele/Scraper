@@ -18,7 +18,10 @@ PREFS = {"profile.managed_default_content_settings.images":2,
          }
 
 # Potential classes name that Nike use for their size chart
-POTENTIAL_CLASSES = ['css-1uentg', 'css-1gxjmmq']
+POTENTIAL_CLASSES_FOR_SIZES = ["css-xf3ahq", 'css-1uentg', 'css-1gxjmmq']
 
 # path to chromedriver.exe
 CHROME_DRIVER_PATH = 'C:\Program Files (x86)\Google\Chrome\chromedriver.exe'
+
+# Nike cart URL
+CART = "https://www.nike.com/us/en/cart"
